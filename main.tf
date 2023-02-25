@@ -43,3 +43,43 @@ resource "aws_subnet" "public_subnet_2" {
   # Specify that this is a public subnet
   map_public_ip_on_launch = true
 }
+
+# Create a private subnet 3 with CIDR block 10.0.3.0/24
+resource "aws_subnet" "private_subnet_3" {
+  vpc_id     = aws_vpc.threetier-arch-vpc.id
+  cidr_block = "${var.priv3_3tier_cidr_block}"
+  availability_zone = "${var.sub_3tier_zonea}"
+  tags = {
+    Name = "private_subnet_3"
+  }
+}
+
+# Create a private subnet 4 with CIDR block 10.0.4.0/24
+resource "aws_subnet" "private_subnet_4" {
+  vpc_id     = aws_vpc.threetier-arch-vpc.id
+  cidr_block = "${var.priv4_3tier_cidr_block}"
+  availability_zone = "${var.sub_3tier_zoneb}"
+  tags = {
+    Name = "private_subnet_4"
+  }
+}
+
+# Create a private subnet 5 with CIDR block 10.0.5.0/24
+resource "aws_subnet" "private_subnet_5" {
+  vpc_id     = aws_vpc.threetier-arch-vpc.id
+  cidr_block = "${var.priv5_3tier_cidr_block}"
+  availability_zone = "${var.sub_3tier_zonea}"
+  tags = {
+    Name = "private_subnet_5"
+  }
+}
+
+# Create a private subnet 6 with CIDR block 10.0.6.0/24
+resource "aws_subnet" "private_subnet_6" {
+  vpc_id     = aws_vpc.threetier-arch-vpc.id
+  cidr_block = "${var.priv6_3tier_cidr_block}"
+  availability_zone = "${var.sub_3tier_zoneb}"
+  tags = {
+    Name = "private_subnet_6"
+  }
+}
