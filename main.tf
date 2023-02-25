@@ -261,7 +261,7 @@ resource "aws_launch_configuration" "my-3tier-launch" {
   }
   # Associate launch configuration with VPC and subnet
   #associate_public_ip_address = true
-  vpc_classic_link_id = aws_vpc.threetier-arch-vpc.id
+  #vpc_classic_link_id = aws_vpc.threetier-arch-vpc.id
 }
 
 # Create launch configuraion template for app tier
@@ -316,6 +316,7 @@ resource "aws_autoscaling_group" "apptier-asg" {
 resource "aws_security_group" "database_sg" {
   name_prefix = "database_sg"
   description = "db tier security group"
+  vpc_id      = aws_vpc.threetier-arch-vpc.id
   
   ingress {
     from_port   = 3306
