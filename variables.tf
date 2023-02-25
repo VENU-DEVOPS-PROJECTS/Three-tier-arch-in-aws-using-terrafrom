@@ -13,7 +13,12 @@ variable "pub1_3tier_cidr_block" {
   default     = "10.10.1.0/24"
 }
 
-variable "pub1_3tier_zone" {
-  description = "The zone for my pub1_3tier"
+variable "pub1_3tier_zonea" {
+  description = "The zonea for my pub1_3tier"
   default     = "us-east-2a"
+}
+
+variable "pub1_3tier_zoneb" {
+  description = "The zoneb for my pub1_3tier"
+  default     = "us-east-2b"
 }
