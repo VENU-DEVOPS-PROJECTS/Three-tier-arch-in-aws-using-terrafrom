@@ -166,3 +166,147 @@ resource "aws_route_table_association" "associate-private-subnet-6" {
   subnet_id      = aws_subnet.private_subnet_6.id
   route_table_id = aws_route_table.my-private-RT.id
 }
+
+# Create SG for web tier
+resource "aws_security_group" "my3tierweb_sg" {
+  name_prefix = "my3tierwebsg"
+  description = "web tier security group"
+
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "my3tierwebsg"
+  }
+}
+
+# Create SG for app tier
+resource "aws_security_group" "apptier_sg" {
+  name_prefix = "apptiersg"
+  description = "app tier security group"
+
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  
+  ingress {
+    from_port   = 3306
+    to_port     = 3306
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "apptiersg"
+  }
+}
+
+# Create launch configuraion template for web tier
+resource "aws_launch_configuration" "my-3tier-launch" {
+  name_prefix = "my-3tier-launch"
+  image_id = "${var.image_id}"
+  instance_type = "${var.instance_type}"
+  security_groups = ["${aws_security_group.my3tierweb_sg.id}"]
+  key_name = "T3-key"
+  
+  user_data = <<-EOF
+              #!/bin/bash
+              yum update -y
+              yum install -y httpd
+              systemctl enable httpd
+              systemctl start httpd
+
+              echo "<html><body><h1>Welcome to the web tier!</h1></body></html>" > /var/www/html/index.html
+              EOF
+
+  lifecycle {
+    create_before_destroy = true
+  }
+  tags = {
+    Name = "my-3tier-launch"
+  }
+}
+
+# Create launch configuraion template for app tier
+resource "aws_launch_configuration" "my-apptier-launch" {
+  name_prefix = "my-apptier-launch"
+  image_id = "${var.image_id}"
+  instance_type = "${var.instance_type}"
+  security_groups = ["${aws_security_group.apptier_sg.id}"]
+  key_name = "T3-key"
+  
+  user_data = <<-EOF
+              #!/bin/bash
+              echo $SHELL
+              EOF
+
+  lifecycle {
+    create_before_destroy = true
+  }
+  tags = {
+    Name = "my-apptier-launch"
+  }
+}
+
+resource "aws_autoscaling_group" "webtier-asg" {
+  name_prefix = "webtier-asg"
+  launch_configuration = aws_launch_configuration.my-3tier-launch.id
+  vpc_zone_identifier = ["${aws_subnet.public_subnet_1.id}", "${aws_subnet.public_subnet_2.id}"]
+  min_size = 1
+  max_size = 2
+  desired_capacity = 1
+
+  tag {
+    Name = "webtier-asg"
+    propagate_at_launch = true
+  }
+}
+
+resource "aws_autoscaling_group" "apptier-asg" {
+  name_prefix = "apptier-asg"
+  launch_configuration = aws_launch_configuration.my-apptier-launch.id
+  vpc_zone_identifier = ["${aws_subnet.private_subnet_3.id}", "${aws_subnet.private_subnet_4.id}"]
+  min_size = 1
+  max_size = 2
+  desired_capacity = 1
+
+  tag {
+    Name = "apptier-asg"
+    propagate_at_launch = true
+  }
+}
