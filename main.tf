@@ -286,7 +286,8 @@ resource "aws_autoscaling_group" "webtier-asg" {
   desired_capacity = 1
 
   tag {
-    Name = "webtier-asg"
+    key = "Name"
+    value = "webtier-asg"
     propagate_at_launch = true
   }
 }
@@ -300,7 +301,8 @@ resource "aws_autoscaling_group" "apptier-asg" {
   desired_capacity = 1
 
   tag {
-    Name = "apptier-asg"
+    key = "Name"
+    value = "webtier-asg"
     propagate_at_launch = true
   }
 }
