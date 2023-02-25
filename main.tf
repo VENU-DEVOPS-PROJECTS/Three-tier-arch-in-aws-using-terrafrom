@@ -257,9 +257,6 @@ resource "aws_launch_configuration" "my-3tier-launch" {
   lifecycle {
     create_before_destroy = true
   }
-  tags = {
-    Name = "my-3tier-launch"
-  }
 }
 
 # Create launch configuraion template for app tier
@@ -277,9 +274,6 @@ resource "aws_launch_configuration" "my-apptier-launch" {
 
   lifecycle {
     create_before_destroy = true
-  }
-  tags = {
-    Name = "my-apptier-launch"
   }
 }
 
