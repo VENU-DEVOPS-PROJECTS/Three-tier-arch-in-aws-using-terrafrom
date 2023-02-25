@@ -5,6 +5,6 @@ provider "aws" {
 
 
 # Create a new VPC with CIDR block 10.0.0.0/16
-resource "aws_vpc" "3tier-arch-vpc" {
+resource "aws_vpc" "threetier-arch-vpc" {
   cidr_block = "${vpc_cidr_block}"
 }
