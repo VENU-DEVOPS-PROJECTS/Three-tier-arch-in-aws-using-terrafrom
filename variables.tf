@@ -50,7 +50,7 @@ variable "priv6_3tier_cidr_block" {
 
 variable "image_id" {
   description = "The image to be used in launch configuration"
-  default     = "ami-09f3bb43b9f607008"
+  default     = "ami-0cc87e5027adcdca8"
 }
 
 variable "instance_type" {
