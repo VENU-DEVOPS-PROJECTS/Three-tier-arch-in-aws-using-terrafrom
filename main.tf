@@ -333,7 +333,7 @@ resource "aws_security_group" "database_sg" {
 
 resource "aws_db_subnet_group" "database-1_subnet_group" {
   name       = "database-1_subnet_group"
-  subnet_ids = aws_subnet.private_subnet_3.id
+  subnet_ids = "${aws_subnet.private_subnet_3.id}"
 }
 
 resource "aws_db_instance" "database-1" {
