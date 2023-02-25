@@ -24,7 +24,7 @@ resource "aws_internet_gateway" "threetier-arch-igw" {
 resource "aws_subnet" "public_subnet" {
   vpc_id     = aws_vpc.threetier-arch-vpc.id
   cidr_block = "${var.pub1_3tier_cidr_block}"
-  availability_zone = "${var.pub1_3tier_zone}"
+  availability_zone = "${var.pub1_3tier_zonea}"
   tags = {
     Name = "public_subnet_1"
   }
