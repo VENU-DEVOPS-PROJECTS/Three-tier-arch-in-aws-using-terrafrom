@@ -83,3 +83,30 @@ resource "aws_subnet" "private_subnet_6" {
     Name = "private_subnet_6"
   }
 }
+
+# Create public route table
+resource "aws_route_table" "my-public-RT" {
+  vpc_id = aws_vpc.threetier-arch-vpc.id
+  tags = {
+    Name = "my-public-RT"
+  }
+}
+
+# Adding routes to the public route table
+resource "aws_route" "normal-route" {
+  route_table_id            = aws_route_table.my-public-RT.id
+  destination_cidr_block    = "0.0.0.0/0"
+  gateway_id                = aws_internet_gateway.threetier-arch-igw.id
+}
+
+# Associating public subnet 1 to the public route table
+resource "aws_route_table_association" "associate-public-subnet-1" {
+  subnet_id      = aws_subnet.public_subnet_1.id
+  route_table_id = aws_route_table.my-public-RT.id
+}
+
+# Associating public subnet 2 to the public route table
+resource "aws_route_table_association" "associate-public-subnet-1" {
+  subnet_id      = aws_subnet.public_subnet_2.id
+  route_table_id = aws_route_table.my-public-RT.id
+}
