@@ -93,7 +93,7 @@ resource "aws_route_table" "my-public-RT" {
 }
 
 # Adding routes to the public route table
-resource "aws_route" "normal-route" {
+resource "aws_route" "normal-public-route" {
   route_table_id            = aws_route_table.my-public-RT.id
   destination_cidr_block    = "0.0.0.0/0"
   gateway_id                = aws_internet_gateway.threetier-arch-igw.id
@@ -137,7 +137,7 @@ resource "aws_route_table" "my-private-RT" {
 }
 
 # Adding routes to the public route table
-resource "aws_route" "normal-route" {
+resource "aws_route" "normal-private-route" {
   route_table_id            = aws_route_table.my-private-RT.id
   destination_cidr_block    = "0.0.0.0/0"
   gateway_id                = aws_internet_gateway.threetier-arch-nat_gateway.id
