@@ -170,6 +170,7 @@ resource "aws_route_table_association" "associate-private-subnet-6" {
 # Create SG for web tier
 resource "aws_security_group" "my3tierweb_sg" {
   name_prefix = "my3tierwebsg"
+  vpc_id      = aws_vpc.threetier-arch-vpc.id
   description = "web tier security group"
 
   ingress {
@@ -201,6 +202,7 @@ resource "aws_security_group" "my3tierweb_sg" {
 # Create SG for app tier
 resource "aws_security_group" "apptier_sg" {
   name_prefix = "apptiersg"
+  vpc_id      = aws_vpc.threetier-arch-vpc.id
   description = "app tier security group"
 
   ingress {
@@ -339,21 +341,21 @@ resource "aws_db_subnet_group" "database-1_subnet_group" {
   subnet_ids = toset([aws_subnet.private_subnet_3.id,aws_subnet.private_subnet_4.id])
 }
 
-resource "aws_db_instance" "database-1" {
-  identifier            = "database-1"
+resource "aws_db_instance" "database1" {
+  identifier            = "database1"
   allocated_storage     = 20
   engine                = "mysql"
   engine_version        = "5.7"
   instance_class        = "db.t2.micro"
-  name                  = "database-1"
+  name                  = "database1"
   username              = "admin"
   password              = "admin3339"
   skip_final_snapshot   = true
   publicly_accessible  = false
   vpc_security_group_ids = [aws_security_group.database_sg.id]
-  db_subnet_group_name   = aws_db_subnet_group.database-1_subnet_group.name
+  db_subnet_group_name   = aws_db_subnet_group.database1_subnet_group.name
 }
 
 output "db_instance_address" {
-  value = aws_db_instance.database-1.address
+  value = aws_db_instance.database1.address
 }
