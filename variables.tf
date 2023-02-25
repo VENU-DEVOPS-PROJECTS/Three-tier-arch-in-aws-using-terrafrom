@@ -10,5 +10,5 @@ variable "pub1_3tier_cidr_block" {
 
 variable "pub1_3tier_zone" {
   description = "The zone for my pub1_3tier"
-  default     = "us-east-1a"
+  default     = "us-east-2a"
 }
