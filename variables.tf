@@ -47,3 +47,13 @@ variable "priv6_3tier_cidr_block" {
   description = "The cidr block for my priv6_3tier"
   default     = "10.10.6.0/24"
 }
+
+variable "image_id" {
+  description = "The image to be used in launch configuration"
+  default     = "ami-09f3bb43b9f607008"
+}
+
+variable "instance_type" {
+  description = "The type of instance to be used in launch configuration"
+  default     = "t2.micro"
+}
