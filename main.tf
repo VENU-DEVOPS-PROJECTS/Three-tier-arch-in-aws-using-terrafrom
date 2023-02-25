@@ -257,6 +257,9 @@ resource "aws_launch_configuration" "my-3tier-launch" {
   lifecycle {
     create_before_destroy = true
   }
+  # Associate launch configuration with VPC and subnet
+  #associate_public_ip_address = true
+  vpc_classic_link_id = aws_vpc.threetier-arch-vpc.id
 }
 
 # Create launch configuraion template for app tier
