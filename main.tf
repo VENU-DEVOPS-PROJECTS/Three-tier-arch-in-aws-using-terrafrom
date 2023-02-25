@@ -306,3 +306,51 @@ resource "aws_autoscaling_group" "apptier-asg" {
     propagate_at_launch = true
   }
 }
+
+# Create SG for db tier
+resource "aws_security_group" "database_sg" {
+  name_prefix = "database_sg"
+  description = "db tier security group"
+  
+  ingress {
+    from_port   = 3306
+    to_port     = 3306
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "dbtiersg"
+  }
+}
+
+resource "aws_db_subnet_group" "database-1_subnet_group" {
+  name       = "database-1_subnet_group"
+  subnet_ids = aws_subnet.private_subnet_3.id
+}
+
+resource "aws_db_instance" "database-1" {
+  identifier            = "database-1"
+  allocated_storage     = 20
+  engine                = "mysql"
+  engine_version        = "5.7"
+  instance_class        = "db.t2.micro"
+  name                  = "database-1"
+  username              = "admin"
+  password              = "admin3339"
+  skip_final_snapshot   = true
+  publicly_accessible  = false
+  vpc_security_group_ids = [aws_security_group.database_sg.id]
+  db_subnet_group_name   = aws_db_subnet_group.database-1_subnet_group.name
+}
+
+output "db_instance_address" {
+  value = aws_db_instance.database-1.address
+}
