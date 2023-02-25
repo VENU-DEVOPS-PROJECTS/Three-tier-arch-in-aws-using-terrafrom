@@ -140,7 +140,7 @@ resource "aws_route_table" "my-private-RT" {
 resource "aws_route" "normal-private-route" {
   route_table_id            = aws_route_table.my-private-RT.id
   destination_cidr_block    = "0.0.0.0/0"
-  gateway_id                = aws_internet_gateway.threetier-arch-nat_gateway.id
+  gateway_id                = aws_nat_gateway.threetier-arch-nat_gateway.id
 }
 
 # Associating private subnet 3 to the private route table
