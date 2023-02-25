@@ -120,10 +120,49 @@ resource "aws_eip" "nat_eip" {
 }
 
 # Create NAT GW
-resource "aws_nat_gateway" "nat_gateway" {
+resource "aws_nat_gateway" "threetier-arch-nat_gateway" {
   allocation_id = aws_eip.nat_eip.id
   subnet_id     = aws_subnet.public_subnet_1.id
   tags = {
     Name = "my-3tier-NAT"
   }
+}
+
+# Create private route table
+resource "aws_route_table" "my-private-RT" {
+  vpc_id = aws_vpc.threetier-arch-vpc.id
+  tags = {
+    Name = "my-private-RT"
+  }
+}
+
+# Adding routes to the public route table
+resource "aws_route" "normal-route" {
+  route_table_id            = aws_route_table.my-private-RT.id
+  destination_cidr_block    = "0.0.0.0/0"
+  gateway_id                = aws_internet_gateway.threetier-arch-nat_gateway.id
+}
+
+# Associating private subnet 3 to the private route table
+resource "aws_route_table_association" "associate-private-subnet-3" {
+  subnet_id      = aws_subnet.private_subnet_3.id
+  route_table_id = aws_route_table.my-private-RT.id
+}
+
+# Associating private subnet 4 to the private route table
+resource "aws_route_table_association" "associate-private-subnet-4" {
+  subnet_id      = aws_subnet.private_subnet_4.id
+  route_table_id = aws_route_table.my-private-RT.id
+}
+
+# Associating private subnet 5 to the private route table
+resource "aws_route_table_association" "associate-private-subnet-5" {
+  subnet_id      = aws_subnet.private_subnet_5.id
+  route_table_id = aws_route_table.my-private-RT.id
+}
+
+# Associating private subnet 6 to the private route table
+resource "aws_route_table_association" "associate-private-subnet-6" {
+  subnet_id      = aws_subnet.private_subnet_6.id
+  route_table_id = aws_route_table.my-private-RT.id
 }
